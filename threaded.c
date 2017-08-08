@@ -1,4 +1,50 @@
+#include <stdio.h>
+#define FALSE 0
+#define TRUE 1
+typedef struct threadedTree *threadedPointer;
+typedef struct threadedTree {
+	short int leftThread;
+	threadedPointer leftChild;
+	char data;
+	threadedPointer rightChild;
+	short int rightThread;
+}threadedTree;
 
+void construct_tree(threadedPointer tree); // 주어진 threaded binary tree를 생성한다, 코드로 주어짐.
+threadedPointer insucc(threadedPointer tree); // Program 5.10
+void tinorder(threadedPointer tree); // Program 5.11
+void insertRight(threadedPointer s, threadedPointer r); // Program 5.12
+
+														// insert 함수는 insertRight를 수행하기 전에 노드생성과 생성된 노드에 data를 저장한다.
+void insert(threadedPointer s, char data);
+
+int main()
+{
+	/* initialize a head node */
+	// 직접작성
+	threadedPointer head = (threadedPointer)malloc(sizeof(threadedTree));
+	head->rightChild = head;
+	head->rightThread = FALSE;
+	head->leftThread = FALSE;
+	construct_tree(head);   // 다음 페이지 참고
+	insert(head->leftChild->rightChild, 'E');
+	insert(head->leftChild->leftChild->rightChild, 'F');
+	insert(head->leftChild->leftChild, 'G');
+	tinorder(head);
+
+	return 0;
+}
+void insertRight(threadedPointer s, threadedPointer r)
+{
+	threadedPointer temp;
+	r->rightChild = s->rightChild;
+	r->rightThread = s->rightThread;
+	r->leftChild = s;
+	r->leftThread = TRUE;
+	s->rightChild = r;
+	s->rightThread = FALSE;
+	if (!r->rightThread)
+	{
 		temp = insucc(r);
 		temp->leftChild = r;
 	}
